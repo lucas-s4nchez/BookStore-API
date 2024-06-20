@@ -1,3 +1,5 @@
+import { InvalidUserPasswordException } from '../exceptions';
+
 export class UserPassword {
   private readonly value: string;
   constructor(value: string) {
@@ -11,7 +13,7 @@ export class UserPassword {
 
   private isValidUserPassword() {
     if (this.value.length < 8) {
-      throw new Error('Password is too short');
+      throw new InvalidUserPasswordException('Password is too short');
     }
   }
 }

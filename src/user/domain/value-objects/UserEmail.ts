@@ -1,3 +1,5 @@
+import { InvalidUserEmailException } from '../exceptions';
+
 export class UserEmail {
   private readonly value: string;
   constructor(value: string) {
@@ -11,7 +13,7 @@ export class UserEmail {
 
   private isValidUserEmail() {
     if (this.value.length < 3) {
-      throw new Error('Email is too short');
+      throw new InvalidUserEmailException('Email is too short');
     }
   }
 }

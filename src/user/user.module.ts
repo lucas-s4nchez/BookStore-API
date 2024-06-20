@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './infrastructure/controllers/user.controller';
-import { TypeORMUserRepository } from './infrastructure/repository/typeorm-user-repository';
+import { TypeORMUserRepository } from './infrastructure/repository/TypeOrmUserRepository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeORMUserEntity } from './infrastructure/entities/typeorm-user-entity.entity';
+import { TypeOrmUser } from './infrastructure/entities/TypeOrmUser.entity';
 import { UserRepository } from './domain/repository';
 import {
   FindAllUsers,
@@ -11,7 +11,7 @@ import {
 } from './application/use-cases';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TypeORMUserEntity])],
+  imports: [TypeOrmModule.forFeature([TypeOrmUser])],
   controllers: [UserController],
   providers: [
     { provide: 'UserRepository', useClass: TypeORMUserRepository },

@@ -1,3 +1,5 @@
+import { InvalidUserLastNameException } from '../exceptions';
+
 export class UserLastName {
   private readonly value: string;
   constructor(value: string) {
@@ -9,7 +11,7 @@ export class UserLastName {
   }
   private isValidUserLastName() {
     if (this.value.length < 3) {
-      throw new Error('Last Name is too short');
+      throw new InvalidUserLastNameException('Last Name is too short');
     }
   }
 }

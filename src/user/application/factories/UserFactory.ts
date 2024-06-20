@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '../../domain/entities/user';
+import { User } from '../../domain/entities/User';
 import {
   UserId,
   UserName,
