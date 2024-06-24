@@ -17,25 +17,29 @@ export class TypeORMUserRepository implements UserRepository {
     private readonly ormRepository: Repository<TypeOrmUser>,
   ) {}
 
-  async create(user: User): Promise<User> {
+  async create(user: User): Promise<User | null> {
     const ormUser = this.toTypeOrmUser(user);
     const savedOrmUser = await this.ormRepository.save(ormUser);
-    const domainUser = this.toDomainUser(savedOrmUser);
-    return domainUser;
+    return savedOrmUser ? this.toDomainUser(savedOrmUser) : null;
   }
 
   async findAll(): Promise<User[]> {
     const ormUsers = await this.ormRepository.find();
-    const domainUsers = ormUsers.map((ormUser) => this.toDomainUser(ormUser));
-    return domainUsers;
+    return ormUsers.map((ormUser) => this.toDomainUser(ormUser));
   }
 
-  async findById(id: UserId): Promise<User> {
+  async findById(id: UserId): Promise<User | null> {
     const ormUser = await this.ormRepository.findOneBy({
       id: id.getValue(),
     });
-    const domainUser = this.toDomainUser(ormUser);
-    return domainUser;
+    return ormUser ? this.toDomainUser(ormUser) : null;
+  }
+
+  async findByEmail(email: UserEmail): Promise<User | null> {
+    const ormUser = await this.ormRepository.findOneBy({
+      email: email.getValue(),
+    });
+    return ormUser ? this.toDomainUser(ormUser) : null;
   }
 
   toTypeOrmUser(user: User): TypeOrmUser {

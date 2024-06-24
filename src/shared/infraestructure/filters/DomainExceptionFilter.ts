@@ -1,11 +1,7 @@
 import { Response } from 'express';
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpStatus,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { DomainException } from '../../domain/exceptions';
+import { BadRequestHttpResponseFactory } from '../factories';
 
 @Catch(DomainException)
 export class DomainExceptionFilter implements ExceptionFilter {
@@ -13,9 +9,9 @@ export class DomainExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    response.status(HttpStatus.BAD_REQUEST).json({
-      statusCode: HttpStatus.BAD_REQUEST,
-      error: exception.message,
-    });
+    BadRequestHttpResponseFactory.create(
+      response,
+      exception.message,
+    ).getFailedResponse();
   }
 }

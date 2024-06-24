@@ -1,10 +1,21 @@
-import { Controller, Get, Post, Body, Inject, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Inject,
+  Param,
+  Res,
+} from '@nestjs/common';
 import { ICreateUserDto } from '../../application/dto';
+import { CreatedHttpResponseFactory } from '../../../shared/infraestructure/factories/CreatedHttpResponseFactory';
 import {
   CreateUser,
   FindAllUsers,
   FindUserById,
 } from '../../application/use-cases';
+import { Response } from 'express';
+import { OkHttpResponseFactory } from '../../../shared/infraestructure/factories/OkHttpResponseFactory';
 
 @Controller('user')
 export class UserController {
@@ -15,24 +26,30 @@ export class UserController {
   ) {}
 
   @Post()
-  async create(@Body() createUserDto: ICreateUserDto) {
+  async create(@Res() res: Response, @Body() createUserDto: ICreateUserDto) {
     const userCreated = await this.createUser.execute(createUserDto);
     const mappedUser = userCreated.toPlainObject();
-    return mappedUser;
+
+    return CreatedHttpResponseFactory.create(
+      res,
+      mappedUser,
+    ).getSuccessResponse();
   }
 
   @Get()
-  async getAll() {
+  async getAll(@Res() res: Response) {
     const users = await this.findAllUsers.execute();
     const mappedUsers = users.map((user) => user.toPlainObject());
-    return mappedUsers;
+
+    return OkHttpResponseFactory.create(res, mappedUsers).getSuccessResponse();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Res() res: Response, @Param('id') id: string) {
     const user = await this.findUserById.execute(id);
     const mappedUser = user.toPlainObject();
-    return mappedUser;
+
+    return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
   }
 
   // @Patch(':id')
