@@ -6,11 +6,13 @@ import {
   Inject,
   Param,
   Res,
+  Patch,
 } from '@nestjs/common';
-import { ICreateUserDto } from '../../application/dto';
+import { ICreateUserDto, IEditUserEmailDto } from '../../application/dto';
 import { CreatedHttpResponseFactory } from '../../../shared/infraestructure/factories/CreatedHttpResponseFactory';
 import {
   CreateUser,
+  EditUserEmail,
   FindAllUsers,
   FindUserById,
 } from '../../application/use-cases';
@@ -23,6 +25,7 @@ export class UserController {
     @Inject('CreateUser') private readonly createUser: CreateUser,
     @Inject('FindAllUsers') private readonly findAllUsers: FindAllUsers,
     @Inject('FindUserById') private readonly findUserById: FindUserById,
+    @Inject('EditUserEmail') private readonly editUserEmail: EditUserEmail,
   ) {}
 
   @Post()
@@ -52,10 +55,17 @@ export class UserController {
     return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: IUpdateUserDto) {
-  //   return 'update user';
-  // }
+  @Patch('/edit-email/:id') //TODO: no utilizar parametro id, actualizar al usuario autenticado en el token
+  async editEmail(
+    @Res() res: Response,
+    @Param('id') id: string,
+    @Body() editUserEmailDto: IEditUserEmailDto,
+  ) {
+    const user = await this.editUserEmail.execute(editUserEmailDto, id);
+    const mappedUser = user.toPlainObject();
+
+    return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

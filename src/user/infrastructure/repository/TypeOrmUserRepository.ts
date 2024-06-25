@@ -42,6 +42,13 @@ export class TypeORMUserRepository implements UserRepository {
     return ormUser ? this.toDomainUser(ormUser) : null;
   }
 
+  async editEmail(email: UserEmail, user: User): Promise<User | null> {
+    user.setEmail(email.getValue());
+    const updatedOrmUser = await this.ormRepository.save(
+      this.toTypeOrmUser(user),
+    );
+    return updatedOrmUser ? this.toDomainUser(updatedOrmUser) : null;
+  }
   toTypeOrmUser(user: User): TypeOrmUser {
     const typeOrmUser = new TypeOrmUser();
     typeOrmUser.id = user.getId();
