@@ -11,7 +11,7 @@ export class UserLastName {
   }
   private isValidUserLastName() {
     if (this.value.length < 3) {
-      throw new InvalidUserLastNameException('Last Name is too short');
+      throw new InvalidUserLastNameException();
     }
   }
 }

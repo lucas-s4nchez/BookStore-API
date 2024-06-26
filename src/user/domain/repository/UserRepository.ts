@@ -1,10 +1,10 @@
+import { Email, Uuid } from '../../../shared/domain/value-objects';
 import { User } from '../entities';
-import { UserEmail, UserId } from '../value-objects';
 
 export interface UserRepository {
   create(user: User): Promise<User | null>;
   findAll(): Promise<User[]>;
-  findById(id: UserId): Promise<User | null>;
-  findByEmail(email: UserEmail): Promise<User | null>;
-  editEmail(email: UserEmail, user: User): Promise<User | null>;
+  findById(id: Uuid): Promise<User | null>;
+  findByEmail(email: Email): Promise<User | null>;
+  editEmail(email: Email, user: User): Promise<User | null>;
 }

@@ -1,21 +1,21 @@
 import { validate } from 'uuid';
-import { InvalidUserIdException } from '../exceptions';
+import { InvalidUuidException } from '../exceptions';
 
-export class UserId {
+export class Uuid {
   private readonly value: string;
   constructor(value: string) {
-    this.value = value;
-    this.isValidUserId();
+    this.value = value.trim().toLowerCase();
+    this.isValidUuid();
   }
 
   getValue(): string {
     return this.value;
   }
 
-  private isValidUserId() {
+  private isValidUuid() {
     const isValid = validate(this.value);
     if (!isValid) {
-      throw new InvalidUserIdException('User id is not a valid uuid');
+      throw new InvalidUuidException();
     }
   }
 }

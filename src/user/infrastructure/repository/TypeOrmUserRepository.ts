@@ -4,12 +4,11 @@ import { TypeOrmUser } from '../entities/TypeOrmUser.entity';
 import { User } from '../../domain/entities';
 import { UserRepository } from '../../domain/repository';
 import {
-  UserId,
-  UserEmail,
   UserLastName,
   UserName,
   UserPassword,
 } from '../../domain/value-objects';
+import { Email, Uuid } from '../../../shared/domain/value-objects';
 
 export class TypeORMUserRepository implements UserRepository {
   constructor(
@@ -28,21 +27,21 @@ export class TypeORMUserRepository implements UserRepository {
     return ormUsers.map((ormUser) => this.toDomainUser(ormUser));
   }
 
-  async findById(id: UserId): Promise<User | null> {
+  async findById(id: Uuid): Promise<User | null> {
     const ormUser = await this.ormRepository.findOneBy({
       id: id.getValue(),
     });
     return ormUser ? this.toDomainUser(ormUser) : null;
   }
 
-  async findByEmail(email: UserEmail): Promise<User | null> {
+  async findByEmail(email: Email): Promise<User | null> {
     const ormUser = await this.ormRepository.findOneBy({
       email: email.getValue(),
     });
     return ormUser ? this.toDomainUser(ormUser) : null;
   }
 
-  async editEmail(email: UserEmail, user: User): Promise<User | null> {
+  async editEmail(email: Email, user: User): Promise<User | null> {
     user.setEmail(email.getValue());
     const updatedOrmUser = await this.ormRepository.save(
       this.toTypeOrmUser(user),
@@ -63,10 +62,10 @@ export class TypeORMUserRepository implements UserRepository {
   }
 
   toDomainUser(typeOrmUser: TypeOrmUser): User {
-    const id = new UserId(typeOrmUser.id);
+    const id = new Uuid(typeOrmUser.id);
     const name = new UserName(typeOrmUser.name);
     const lastName = new UserLastName(typeOrmUser.lastName);
-    const email = new UserEmail(typeOrmUser.email);
+    const email = new Email(typeOrmUser.email);
     const password = new UserPassword(typeOrmUser.password);
     const createdAt = typeOrmUser.createdAt;
     const updatedAt = typeOrmUser.updatedAt;

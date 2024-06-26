@@ -2,13 +2,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../domain/entities/User';
 import {
-  UserId,
   UserName,
   UserLastName,
-  UserEmail,
   UserPassword,
 } from '../../domain/value-objects';
 import { ICreateUserDto } from '../dto';
+import { Email, Uuid } from '../../../shared/domain/value-objects';
 
 abstract class UserFactory {
   static create(createUserDto: ICreateUserDto): User {
@@ -18,10 +17,10 @@ abstract class UserFactory {
 
 export class UserConcreteFactory extends UserFactory {
   static create(createUserDto: ICreateUserDto): User {
-    const id = new UserId(uuidv4());
+    const id = new Uuid(uuidv4());
     const name = new UserName(createUserDto.name);
     const lastName = new UserLastName(createUserDto.lastName);
-    const email = new UserEmail(createUserDto.email);
+    const email = new Email(createUserDto.email);
     const password = new UserPassword(createUserDto.password);
     const createdAt = new Date();
     const updatedAt = null;

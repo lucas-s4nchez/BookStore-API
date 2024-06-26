@@ -1,9 +1,12 @@
 import { InvalidUserPasswordException } from '../exceptions';
+import { PASSWORD_PATTERN } from '../../../shared/domain/patterns';
 
 export class UserPassword {
   private readonly value: string;
+  private readonly pattern = PASSWORD_PATTERN;
+
   constructor(value: string) {
-    this.value = value.trim().toLowerCase();
+    this.value = value.trim();
     this.isValidUserPassword();
   }
 
@@ -12,8 +15,9 @@ export class UserPassword {
   }
 
   private isValidUserPassword() {
-    if (this.value.length < 8) {
-      throw new InvalidUserPasswordException('Password is too short');
+    const isValid = this.pattern.test(this.value);
+    if (!isValid) {
+      throw new InvalidUserPasswordException();
     }
   }
 }

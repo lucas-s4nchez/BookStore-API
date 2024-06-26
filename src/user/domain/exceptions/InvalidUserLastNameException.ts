@@ -1,8 +1,8 @@
 import { DomainException } from '../../../shared/domain/exceptions';
 
 export class InvalidUserLastNameException extends DomainException {
-  constructor(message: string) {
-    super(message);
+  constructor() {
+    super('Last Name is too short');
     this.name = 'InvalidUserLastNameException';
   }
 }

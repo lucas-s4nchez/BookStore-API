@@ -1,26 +1,21 @@
-import {
-  UserEmail,
-  UserId,
-  UserLastName,
-  UserName,
-  UserPassword,
-} from '../value-objects';
+import { Email, Uuid } from '../../../shared/domain/value-objects';
+import { UserLastName, UserName, UserPassword } from '../value-objects';
 
 export class User {
-  private readonly id: UserId;
+  private readonly id: Uuid;
   private name: UserName;
   private lastName: UserLastName;
-  private email: UserEmail;
+  private email: Email;
   private password: UserPassword;
   private createdAt: Date;
   private updatedAt: Date | null;
   private deletedAt: Date | null;
 
   constructor(
-    id: UserId,
+    id: Uuid,
     name: UserName,
     lastName: UserLastName,
-    email: UserEmail,
+    email: Email,
     password: UserPassword,
     createdAt: Date,
     updatedAt: Date | null,
@@ -61,7 +56,7 @@ export class User {
   }
 
   public setEmail(email: string): void {
-    this.email = new UserEmail(email);
+    this.email = new Email(email);
   }
 
   public getPassword(): string {

@@ -13,7 +13,7 @@ export class UserName {
 
   private isValidUserName() {
     if (this.value.length < 3) {
-      throw new InvalidUserNameException('Name is too short');
+      throw new InvalidUserNameException();
     }
   }
 }
