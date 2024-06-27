@@ -16,13 +16,11 @@ export class CreateUser {
     const existingUser = await this.repository.findByEmail(
       new Email(createUserDto.email),
     );
-    if (existingUser) {
-      throw new UserAlreadyExistsException();
-    }
+    if (existingUser) throw new UserAlreadyExistsException();
+
     const createdUser = await this.repository.create(domainUser);
-    if (!createdUser) {
-      throw new UserFailsToCreateException();
-    }
+    if (!createdUser) throw new UserFailsToCreateException();
+
     return createdUser;
   }
 }

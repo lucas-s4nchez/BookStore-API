@@ -1,4 +1,10 @@
-import { Email, Uuid } from '../../../shared/domain/value-objects';
+import {
+  CreatedAt,
+  Email,
+  Uuid,
+  UpdatedAt,
+  DeletedAt,
+} from '../../../shared/domain/value-objects';
 import { UserLastName, UserName, UserPassword } from '../value-objects';
 
 export class User {
@@ -7,9 +13,9 @@ export class User {
   private lastName: UserLastName;
   private email: Email;
   private password: UserPassword;
-  private createdAt: Date;
-  private updatedAt: Date | null;
-  private deletedAt: Date | null;
+  private createdAt: CreatedAt;
+  private updatedAt: UpdatedAt;
+  private deletedAt: DeletedAt;
 
   constructor(
     id: Uuid,
@@ -17,9 +23,9 @@ export class User {
     lastName: UserLastName,
     email: Email,
     password: UserPassword,
-    createdAt: Date,
-    updatedAt: Date | null,
-    deletedAt: Date | null,
+    createdAt: CreatedAt,
+    updatedAt: UpdatedAt,
+    deletedAt: DeletedAt,
   ) {
     this.id = id;
     this.name = name;
@@ -68,27 +74,27 @@ export class User {
   }
 
   public getCreatedAt(): Date {
-    return this.createdAt;
+    return this.createdAt.getValue();
   }
 
   public setCreatedAt(createdAt: Date): void {
-    this.createdAt = createdAt;
+    this.createdAt = new CreatedAt(createdAt);
   }
 
   public getUpdatedAt(): Date | null {
-    return this.updatedAt;
+    return this.updatedAt.getValue();
   }
 
   public setUpdatedAt(updatedAt: Date | null): void {
-    this.updatedAt = updatedAt;
+    this.updatedAt = new UpdatedAt(updatedAt);
   }
 
   public getDeletedAt(): Date | null {
-    return this.deletedAt;
+    return this.deletedAt.getValue();
   }
 
   public setDeletedAt(deletedAt: Date | null): void {
-    this.deletedAt = deletedAt;
+    this.deletedAt = new DeletedAt(deletedAt);
   }
 
   public toPlainObject() {
@@ -98,9 +104,9 @@ export class User {
       lastName: this.lastName.getValue(),
       email: this.email.getValue(),
       password: this.password.getValue(),
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      deletedAt: this.deletedAt,
+      createdAt: this.createdAt.getValue(),
+      updatedAt: this.updatedAt.getValue(),
+      deletedAt: this.deletedAt.getValue(),
     };
   }
 }

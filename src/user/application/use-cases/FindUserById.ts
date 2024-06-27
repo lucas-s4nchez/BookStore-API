@@ -8,9 +8,7 @@ export class FindUserById {
 
   async execute(id: string): Promise<User> {
     const user = await this.userRepository.findById(new Uuid(id));
-    if (!user) {
-      throw new UserNotFoundException();
-    }
+    if (!user) throw new UserNotFoundException();
 
     return user;
   }

@@ -1,6 +1,12 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TypeOrmUser } from '../entities/TypeOrmUser.entity';
+import {
+  CreatedAt,
+  DeletedAt,
+  Email,
+  UpdatedAt,
+  Uuid,
+} from '../../../shared/domain/value-objects';
 import { User } from '../../domain/entities';
 import { UserRepository } from '../../domain/repository';
 import {
@@ -8,7 +14,7 @@ import {
   UserName,
   UserPassword,
 } from '../../domain/value-objects';
-import { Email, Uuid } from '../../../shared/domain/value-objects';
+import { TypeOrmUser } from '../entities/TypeOrmUser.entity';
 
 export class TypeORMUserRepository implements UserRepository {
   constructor(
@@ -43,6 +49,7 @@ export class TypeORMUserRepository implements UserRepository {
 
   async editEmail(email: Email, user: User): Promise<User | null> {
     user.setEmail(email.getValue());
+    user.setUpdatedAt(new Date());
     const updatedOrmUser = await this.ormRepository.save(
       this.toTypeOrmUser(user),
     );
@@ -51,6 +58,7 @@ export class TypeORMUserRepository implements UserRepository {
 
   async editPassword(password: UserPassword, user: User): Promise<User | null> {
     user.setPassword(password.getValue());
+    user.setUpdatedAt(new Date());
     const updatedOrmUser = await this.ormRepository.save(
       this.toTypeOrmUser(user),
     );
@@ -64,6 +72,7 @@ export class TypeORMUserRepository implements UserRepository {
   ): Promise<User | null> {
     user.setName(name.getValue());
     user.setLastName(lastName.getValue());
+    user.setUpdatedAt(new Date());
     const updatedOrmUser = await this.ormRepository.save(
       this.toTypeOrmUser(user),
     );
@@ -89,9 +98,9 @@ export class TypeORMUserRepository implements UserRepository {
     const lastName = new UserLastName(typeOrmUser.lastName);
     const email = new Email(typeOrmUser.email);
     const password = new UserPassword(typeOrmUser.password);
-    const createdAt = typeOrmUser.createdAt;
-    const updatedAt = typeOrmUser.updatedAt;
-    const deletedAt = typeOrmUser.deletedAt;
+    const createdAt = new CreatedAt(typeOrmUser.createdAt);
+    const updatedAt = new UpdatedAt(typeOrmUser.updatedAt);
+    const deletedAt = new DeletedAt(typeOrmUser.deletedAt);
     const user = new User(
       id,
       name,

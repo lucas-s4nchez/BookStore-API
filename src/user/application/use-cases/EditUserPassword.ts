@@ -16,16 +16,14 @@ export class EditUserPassword {
     id: string,
   ): Promise<User> {
     const user = await this.repository.findById(new Uuid(id));
-    if (!user) {
-      throw new UserNotFoundException();
-    }
+    if (!user) throw new UserNotFoundException();
+
     const editedUser = await this.repository.editPassword(
       new UserPassword(editUserPasswordDto.password),
       user,
     );
-    if (!editedUser) {
-      throw new UserFailsToUpdateException();
-    }
+    if (!editedUser) throw new UserFailsToUpdateException();
+
     return editedUser;
   }
 }
