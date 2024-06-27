@@ -7,7 +7,7 @@ export class UserPassword {
   private readonly pattern = PASSWORD_PATTERN;
 
   constructor(value: string) {
-    this.isNotEmpty(value);
+    this.isRequired(value);
     this.value = value.trim();
     this.isValidUserPassword();
   }
@@ -16,7 +16,7 @@ export class UserPassword {
     return this.value;
   }
 
-  private isNotEmpty(value: string) {
+  private isRequired(value: string) {
     if (!value) throw new RequiredFieldException('Password');
   }
 

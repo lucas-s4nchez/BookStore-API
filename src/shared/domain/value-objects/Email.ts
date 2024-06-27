@@ -6,7 +6,7 @@ export class Email {
   private readonly pattern = EMAIL_PATTERN;
 
   constructor(value: string) {
-    this.isNotEmpty(value);
+    this.isRequired(value);
     this.value = value.trim().toLowerCase();
     this.isValidEmail();
   }
@@ -15,7 +15,7 @@ export class Email {
     return this.value;
   }
 
-  private isNotEmpty(value: string) {
+  private isRequired(value: string) {
     if (!value) throw new RequiredFieldException('Email');
   }
   private isValidEmail() {

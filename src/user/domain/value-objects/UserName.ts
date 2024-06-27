@@ -4,7 +4,7 @@ import { InvalidUserNameException } from '../exceptions';
 export class UserName {
   private readonly value: string;
   constructor(value: string) {
-    this.isNotEmpty(value);
+    this.isRequired(value);
     this.value = value.trim().toLowerCase();
     this.isValidUserName();
   }
@@ -13,7 +13,7 @@ export class UserName {
     return this.value;
   }
 
-  private isNotEmpty(value: string) {
+  private isRequired(value: string) {
     if (!value) throw new RequiredFieldException('Name');
   }
 
