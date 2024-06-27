@@ -8,11 +8,18 @@ import {
   Res,
   Patch,
 } from '@nestjs/common';
-import { ICreateUserDto, IEditUserEmailDto } from '../../application/dto';
+import {
+  ICreateUserDto,
+  IEditUserEmailDto,
+  IEditUserNameDto,
+  IEditUserPasswordDto,
+} from '../../application/dto';
 import { CreatedHttpResponseFactory } from '../../../shared/infraestructure/factories/CreatedHttpResponseFactory';
 import {
   CreateUser,
   EditUserEmail,
+  EditUserName,
+  EditUserPassword,
   FindAllUsers,
   FindUserById,
 } from '../../application/use-cases';
@@ -26,6 +33,9 @@ export class UserController {
     @Inject('FindAllUsers') private readonly findAllUsers: FindAllUsers,
     @Inject('FindUserById') private readonly findUserById: FindUserById,
     @Inject('EditUserEmail') private readonly editUserEmail: EditUserEmail,
+    @Inject('EditUserPassword')
+    private readonly editUserPassword: EditUserPassword,
+    @Inject('EditUserName') private readonly editUserName: EditUserName,
   ) {}
 
   @Post()
@@ -55,13 +65,37 @@ export class UserController {
     return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
   }
 
-  @Patch('/edit-email/:id') //TODO: no utilizar parametro id, actualizar al usuario autenticado en el token
+  @Patch('edit-email/:id') //TODO: no utilizar parametro id, actualizar al usuario autenticado en el token
   async editEmail(
     @Res() res: Response,
     @Param('id') id: string,
     @Body() editUserEmailDto: IEditUserEmailDto,
   ) {
     const user = await this.editUserEmail.execute(editUserEmailDto, id);
+    const mappedUser = user.toPlainObject();
+
+    return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
+  }
+
+  @Patch('edit-password/:id') //TODO: no utilizar parametro id, actualizar al usuario autenticado en el token
+  async editPassword(
+    @Res() res: Response,
+    @Param('id') id: string,
+    @Body() editUserPasswordDto: IEditUserPasswordDto,
+  ) {
+    const user = await this.editUserPassword.execute(editUserPasswordDto, id);
+    const mappedUser = user.toPlainObject();
+
+    return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
+  }
+
+  @Patch('edit-name/:id') //TODO: no utilizar parametro id, actualizar al usuario autenticado en el token
+  async editName(
+    @Res() res: Response,
+    @Param('id') id: string,
+    @Body() editUserNameDto: IEditUserNameDto,
+  ) {
+    const user = await this.editUserName.execute(editUserNameDto, id);
     const mappedUser = user.toPlainObject();
 
     return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();

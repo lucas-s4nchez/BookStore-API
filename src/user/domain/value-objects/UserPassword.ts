@@ -6,12 +6,19 @@ export class UserPassword {
   private readonly pattern = PASSWORD_PATTERN;
 
   constructor(value: string) {
+    this.isNotEmpty(value);
     this.value = value.trim();
     this.isValidUserPassword();
   }
 
   public getValue(): string {
     return this.value;
+  }
+
+  private isNotEmpty(value: string) {
+    if (!value) {
+      throw new InvalidUserPasswordException();
+    }
   }
 
   private isValidUserPassword() {

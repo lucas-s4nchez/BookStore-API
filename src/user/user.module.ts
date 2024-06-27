@@ -9,6 +9,8 @@ import {
   CreateUser,
   FindUserById,
   EditUserEmail,
+  EditUserPassword,
+  EditUserName,
 } from './application/use-cases';
 
 @Module({
@@ -34,6 +36,17 @@ import {
     {
       provide: 'EditUserEmail',
       useFactory: (repository: UserRepository) => new EditUserEmail(repository),
+      inject: ['UserRepository'],
+    },
+    {
+      provide: 'EditUserPassword',
+      useFactory: (repository: UserRepository) =>
+        new EditUserPassword(repository),
+      inject: ['UserRepository'],
+    },
+    {
+      provide: 'EditUserName',
+      useFactory: (repository: UserRepository) => new EditUserName(repository),
       inject: ['UserRepository'],
     },
   ],
