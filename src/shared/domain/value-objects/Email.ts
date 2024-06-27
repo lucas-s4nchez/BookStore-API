@@ -1,4 +1,4 @@
-import { InvalidEmailException } from '../exceptions';
+import { InvalidEmailException, RequiredFieldException } from '../exceptions';
 import { EMAIL_PATTERN } from '../patterns';
 
 export class Email {
@@ -6,6 +6,7 @@ export class Email {
   private readonly pattern = EMAIL_PATTERN;
 
   constructor(value: string) {
+    this.isNotEmpty(value);
     this.value = value.trim().toLowerCase();
     this.isValidEmail();
   }
@@ -14,10 +15,11 @@ export class Email {
     return this.value;
   }
 
+  private isNotEmpty(value: string) {
+    if (!value) throw new RequiredFieldException('Email');
+  }
   private isValidEmail() {
     const isValid = this.pattern.test(this.value);
-    if (!isValid) {
-      throw new InvalidEmailException();
-    }
+    if (!isValid) throw new InvalidEmailException();
   }
 }

@@ -1,5 +1,6 @@
 import { InvalidUserPasswordException } from '../exceptions';
 import { PASSWORD_PATTERN } from '../../../shared/domain/patterns';
+import { RequiredFieldException } from '../../../shared/domain/exceptions';
 
 export class UserPassword {
   private readonly value: string;
@@ -16,15 +17,11 @@ export class UserPassword {
   }
 
   private isNotEmpty(value: string) {
-    if (!value) {
-      throw new InvalidUserPasswordException();
-    }
+    if (!value) throw new RequiredFieldException('Password');
   }
 
   private isValidUserPassword() {
     const isValid = this.pattern.test(this.value);
-    if (!isValid) {
-      throw new InvalidUserPasswordException();
-    }
+    if (!isValid) throw new InvalidUserPasswordException();
   }
 }
