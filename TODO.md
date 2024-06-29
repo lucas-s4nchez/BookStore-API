@@ -1,4 +1,4 @@
-// Cambiar las fechas de creacion, actualizacion y eliminacion por value objects en la entidad usuario
-// eliminacion de usuario
+// Cambiar las fechas de creacion, actualizacion y eliminacion por value objects en la entidad usuario (hecho)
+// eliminacion de usuario sin depender de typeORM (hecho)
 // modulo de autentificacion
 // agregar roles(Admin/User)

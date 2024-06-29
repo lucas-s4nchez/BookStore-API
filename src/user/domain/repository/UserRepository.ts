@@ -14,4 +14,5 @@ export interface UserRepository {
     lastName: UserLastName,
     user: User,
   ): Promise<User | null>;
+  delete(user: User): Promise<User | null>;
 }

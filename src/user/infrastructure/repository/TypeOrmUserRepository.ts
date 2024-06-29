@@ -79,6 +79,15 @@ export class TypeORMUserRepository implements UserRepository {
     return updatedOrmUser ? this.toDomainUser(updatedOrmUser) : null;
   }
 
+  async delete(user: User): Promise<User | null> {
+    //TODO: borrar en cascada las entidades relacionadas
+    user.setDeletedAt(new Date());
+    const deletedOrmUser = await this.ormRepository.save(
+      this.toTypeOrmUser(user),
+    );
+    return deletedOrmUser ? this.toDomainUser(deletedOrmUser) : null;
+  }
+
   toTypeOrmUser(user: User): TypeOrmUser {
     const typeOrmUser = new TypeOrmUser();
     typeOrmUser.id = user.getId();

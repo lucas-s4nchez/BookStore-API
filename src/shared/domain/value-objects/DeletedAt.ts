@@ -22,7 +22,6 @@ export class DeletedAt {
 
   private isValidDeletedAt() {
     if (this.value === null) return;
-
     if (this.value > new Date()) throw new InvalidDeletedAtException();
   }
 }

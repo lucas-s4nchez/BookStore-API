@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, DeleteDateColumn, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class TypeOrmUser {
@@ -17,12 +17,12 @@ export class TypeOrmUser {
   @Column()
   password: string;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp' })
   createdAt: Date;
 
-  @Column({ default: null, nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   updatedAt: Date;
 
-  @Column({ default: null, nullable: true })
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
 }

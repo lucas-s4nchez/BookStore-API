@@ -7,6 +7,7 @@ import {
   Param,
   Res,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import {
   ICreateUserDto,
@@ -17,6 +18,7 @@ import {
 import { CreatedHttpResponseFactory } from '../../../shared/infraestructure/factories/CreatedHttpResponseFactory';
 import {
   CreateUser,
+  DeleteUser,
   EditUserEmail,
   EditUserName,
   EditUserPassword,
@@ -36,9 +38,10 @@ export class UserController {
     @Inject('EditUserPassword')
     private readonly editUserPassword: EditUserPassword,
     @Inject('EditUserName') private readonly editUserName: EditUserName,
+    @Inject('DeleteUser') private readonly deleteUser: DeleteUser,
   ) {}
 
-  @Post()
+  @Post('create')
   async create(@Res() res: Response, @Body() createUserDto: ICreateUserDto) {
     const userCreated = await this.createUser.execute(createUserDto);
     const mappedUser = userCreated.toPlainObject();
@@ -49,7 +52,7 @@ export class UserController {
     ).getSuccessResponse();
   }
 
-  @Get()
+  @Get('get-all')
   async getAll(@Res() res: Response) {
     const users = await this.findAllUsers.execute();
     const mappedUsers = users.map((user) => user.toPlainObject());
@@ -57,7 +60,7 @@ export class UserController {
     return OkHttpResponseFactory.create(res, mappedUsers).getSuccessResponse();
   }
 
-  @Get(':id')
+  @Get('get-one/:id')
   async findOne(@Res() res: Response, @Param('id') id: string) {
     const user = await this.findUserById.execute(id);
     const mappedUser = user.toPlainObject();
@@ -101,8 +104,11 @@ export class UserController {
     return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
   }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return 'delete user';
-  // }
+  @Delete('delete/:id') //TODO: no utilizar parametro id, eliminar al usuario autenticado en el token
+  async delete(@Res() res: Response, @Param('id') id: string) {
+    const deletedUser = await this.deleteUser.execute(id);
+    const mappedUser = deletedUser.toPlainObject();
+
+    return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
+  }
 }
