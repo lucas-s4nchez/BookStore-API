@@ -10,6 +10,7 @@ import {
 import { User } from '../../domain/entities';
 import { UserRepository } from '../../domain/repository';
 import {
+  HashedUserPassword,
   UserLastName,
   UserName,
   UserPassword,
@@ -106,7 +107,7 @@ export class TypeORMUserRepository implements UserRepository {
     const name = new UserName(typeOrmUser.name);
     const lastName = new UserLastName(typeOrmUser.lastName);
     const email = new Email(typeOrmUser.email);
-    const password = new UserPassword(typeOrmUser.password);
+    const password = new HashedUserPassword(typeOrmUser.password);
     const createdAt = new CreatedAt(typeOrmUser.createdAt);
     const updatedAt = new UpdatedAt(typeOrmUser.updatedAt);
     const deletedAt = new DeletedAt(typeOrmUser.deletedAt);

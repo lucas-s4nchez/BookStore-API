@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import {
   Controller,
   Get,
@@ -25,7 +26,6 @@ import {
   FindAllUsers,
   FindUserById,
 } from '../../application/use-cases';
-import { Response } from 'express';
 import { OkHttpResponseFactory } from '../../../shared/infraestructure/factories/OkHttpResponseFactory';
 
 @Controller('user')

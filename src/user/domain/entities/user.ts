@@ -5,14 +5,19 @@ import {
   UpdatedAt,
   DeletedAt,
 } from '../../../shared/domain/value-objects';
-import { UserLastName, UserName, UserPassword } from '../value-objects';
+import {
+  HashedUserPassword,
+  UserLastName,
+  UserName,
+  UserPassword,
+} from '../value-objects';
 
 export class User {
   private readonly id: Uuid;
   private name: UserName;
   private lastName: UserLastName;
   private email: Email;
-  private password: UserPassword;
+  private password: UserPassword | HashedUserPassword;
   private createdAt: CreatedAt;
   private updatedAt: UpdatedAt;
   private deletedAt: DeletedAt;
@@ -22,7 +27,7 @@ export class User {
     name: UserName,
     lastName: UserLastName,
     email: Email,
-    password: UserPassword,
+    password: UserPassword | HashedUserPassword,
     createdAt: CreatedAt,
     updatedAt: UpdatedAt,
     deletedAt: DeletedAt,
@@ -71,6 +76,10 @@ export class User {
 
   public setPassword(password: string): void {
     this.password = new UserPassword(password);
+  }
+
+  public setHashedPassword(password: string): void {
+    this.password = new HashedUserPassword(password);
   }
 
   public getCreatedAt(): Date {

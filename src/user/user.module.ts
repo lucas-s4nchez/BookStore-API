@@ -56,5 +56,6 @@ import {
       inject: ['UserRepository'],
     },
   ],
+  exports: ['UserRepository'],
 })
 export class UserModule {}
