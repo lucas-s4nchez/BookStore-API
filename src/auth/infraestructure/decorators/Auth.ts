@@ -10,6 +10,7 @@ import { JwtGuard, Roleguard } from '../guards';
  * @return {ReturnType<typeof applyDecorators>} The decorated function.
  */
 export function Auth(...roles: UserRoles[]) {
+  console.log(roles);
   return applyDecorators(
     RequiredRoles(...roles),
     UseGuards(JwtGuard, Roleguard),

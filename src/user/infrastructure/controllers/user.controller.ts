@@ -10,12 +10,7 @@ import {
   Patch,
   Delete,
 } from '@nestjs/common';
-import {
-  ICreateUserDto,
-  IEditUserEmailDto,
-  IEditUserNameDto,
-  IEditUserPasswordDto,
-} from '../../application/dto';
+
 import { CreatedHttpResponseFactory } from '../../../shared/infraestructure/factories/CreatedHttpResponseFactory';
 import {
   CreateUser,
@@ -27,6 +22,14 @@ import {
   FindUserById,
 } from '../../application/use-cases';
 import { OkHttpResponseFactory } from '../../../shared/infraestructure/factories/OkHttpResponseFactory';
+import { Auth } from '../../../auth/infraestructure/decorators';
+import { UserRoles } from '../../../auth/domain/enums';
+import {
+  ICreateUserDto,
+  IEditUserEmailDto,
+  IEditUserNameDto,
+  IEditUserPasswordDto,
+} from '../../application/dto';
 
 @Controller('user')
 export class UserController {
@@ -53,6 +56,7 @@ export class UserController {
   }
 
   @Get('get-all')
+  @Auth(UserRoles.USER)
   async getAll(@Res() res: Response) {
     const users = await this.findAllUsers.execute();
     const mappedUsers = users.map((user) => user.toPlainObject());
