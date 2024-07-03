@@ -15,16 +15,16 @@ import {
   UserPassword,
 } from '../../domain/value-objects';
 import { ICreateUserDto } from '../dto';
-import { BaseUserFactory } from './';
+import { BaseUserFactory } from './BaseUserFactory';
 
-export class UserFactory extends BaseUserFactory {
+export class AdminFactory extends BaseUserFactory {
   static create(createUserDto: ICreateUserDto): User {
     const id = new Uuid(uuidv4());
     const name = new UserName(createUserDto.name);
     const lastName = new UserLastName(createUserDto.lastName);
     const email = new Email(createUserDto.email);
     const password = new UserPassword(createUserDto.password);
-    const role = new Role(UserRoles.USER);
+    const role = new Role(UserRoles.ADMIN);
     const createdAt = new CreatedAt(new Date());
     const updatedAt = new UpdatedAt(null);
     const deletedAt = new DeletedAt(null);

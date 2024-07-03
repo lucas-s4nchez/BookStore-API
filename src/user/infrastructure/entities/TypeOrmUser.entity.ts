@@ -1,4 +1,5 @@
 import { Column, DeleteDateColumn, Entity, PrimaryColumn } from 'typeorm';
+import { UserRoles } from '../../../auth/domain/enums';
 
 @Entity({ name: 'users' })
 export class TypeOrmUser {
@@ -16,6 +17,9 @@ export class TypeOrmUser {
 
   @Column()
   password: string;
+
+  @Column({ type: 'enum', enum: UserRoles, default: UserRoles.USER })
+  role: UserRoles;
 
   @Column({ type: 'timestamp' })
   createdAt: Date;

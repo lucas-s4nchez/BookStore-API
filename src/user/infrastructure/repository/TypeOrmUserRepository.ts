@@ -7,6 +7,7 @@ import {
   UpdatedAt,
   Uuid,
 } from '../../../shared/domain/value-objects';
+import { Role } from '../../../auth/domain/value-objects';
 import { User } from '../../domain/entities';
 import { UserRepository } from '../../domain/repository';
 import {
@@ -96,6 +97,7 @@ export class TypeORMUserRepository implements UserRepository {
     typeOrmUser.lastName = user.getLastName();
     typeOrmUser.email = user.getEmail();
     typeOrmUser.password = user.getPassword();
+    typeOrmUser.role = user.getRole();
     typeOrmUser.createdAt = user.getCreatedAt();
     typeOrmUser.updatedAt = user.getUpdatedAt();
     typeOrmUser.deletedAt = user.getDeletedAt();
@@ -108,6 +110,7 @@ export class TypeORMUserRepository implements UserRepository {
     const lastName = new UserLastName(typeOrmUser.lastName);
     const email = new Email(typeOrmUser.email);
     const password = new HashedUserPassword(typeOrmUser.password);
+    const role = new Role(typeOrmUser.role);
     const createdAt = new CreatedAt(typeOrmUser.createdAt);
     const updatedAt = new UpdatedAt(typeOrmUser.updatedAt);
     const deletedAt = new DeletedAt(typeOrmUser.deletedAt);
@@ -117,6 +120,7 @@ export class TypeORMUserRepository implements UserRepository {
       lastName,
       email,
       password,
+      role,
       createdAt,
       updatedAt,
       deletedAt,

@@ -5,6 +5,8 @@ import {
   UpdatedAt,
   DeletedAt,
 } from '../../../shared/domain/value-objects';
+import { Role } from '../../../auth/domain/value-objects';
+import { UserRoles } from '../../../auth/domain/enums';
 import {
   HashedUserPassword,
   UserLastName,
@@ -18,6 +20,7 @@ export class User {
   private lastName: UserLastName;
   private email: Email;
   private password: UserPassword | HashedUserPassword;
+  private role: Role;
   private createdAt: CreatedAt;
   private updatedAt: UpdatedAt;
   private deletedAt: DeletedAt;
@@ -28,6 +31,7 @@ export class User {
     lastName: UserLastName,
     email: Email,
     password: UserPassword | HashedUserPassword,
+    role: Role,
     createdAt: CreatedAt,
     updatedAt: UpdatedAt,
     deletedAt: DeletedAt,
@@ -37,6 +41,7 @@ export class User {
     this.lastName = lastName;
     this.email = email;
     this.password = password;
+    this.role = role;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.deletedAt = deletedAt;
@@ -82,6 +87,10 @@ export class User {
     this.password = new HashedUserPassword(password);
   }
 
+  public getRole(): UserRoles {
+    return this.role.getValue();
+  }
+
   public getCreatedAt(): Date {
     return this.createdAt.getValue();
   }
@@ -112,7 +121,7 @@ export class User {
       name: this.name.getValue(),
       lastName: this.lastName.getValue(),
       email: this.email.getValue(),
-      password: this.password.getValue(),
+      role: this.role.getValue(),
       createdAt: this.createdAt.getValue(),
       updatedAt: this.updatedAt.getValue(),
       deletedAt: this.deletedAt.getValue(),

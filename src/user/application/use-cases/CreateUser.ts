@@ -5,13 +5,13 @@ import {
   UserAlreadyExistsException,
   UserFailsToCreateException,
 } from '../exceptions';
-import { UserConcreteFactory } from '../factories/UserFactory';
+import { UserFactory } from '../factories/UserFactory';
 import { Email } from 'src/shared/domain/value-objects';
 
 export class CreateUser {
   constructor(private readonly repository: UserRepository) {}
   async execute(createUserDto: ICreateUserDto): Promise<User> {
-    const domainUser = UserConcreteFactory.create(createUserDto);
+    const domainUser = UserFactory.create(createUserDto);
 
     const existingUser = await this.repository.findByEmail(
       new Email(createUserDto.email),

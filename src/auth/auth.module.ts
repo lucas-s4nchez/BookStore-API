@@ -10,6 +10,7 @@ import {
 } from './infraestructure/services';
 import { SignIn, SignUp } from './application/use-cases';
 import { AuthService, HashPasswordService } from './application/services';
+import { JwtStrategy } from './infraestructure/strategies';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthService, HashPasswordService } from './application/services';
   ],
   controllers: [AuthController],
   providers: [
+    JwtStrategy,
     {
       provide: 'AuthService',
       useClass: JwtAuthService,
