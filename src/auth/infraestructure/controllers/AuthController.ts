@@ -1,15 +1,19 @@
 import { Response } from 'express';
-import { Body, Controller, Get, Inject, Post, Res } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
 import { OkHttpResponseFactory } from '../../../shared/infraestructure/factories';
+import { UserRoles } from '../../../auth/domain/enums';
+import { User } from '../../../user/domain/entities';
 import { ICreateUserDto } from '../../../user/application/dto';
 import { ISignInUserDto } from '../../application/dto';
-import { SignIn, SignUp } from '../../application/use-cases';
+import { RefreshToken, SignIn, SignUp } from '../../application/use-cases';
+import { Auth, GetUser } from '../decorators';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     @Inject('SignUp') private readonly signUp: SignUp,
     @Inject('SignIn') private readonly signIn: SignIn,
+    @Inject('RefreshToken') private readonly refreshToken: RefreshToken,
   ) {}
 
   @Post('sign-up')
@@ -36,8 +40,20 @@ export class AuthController {
     return OkHttpResponseFactory.create(res, responseData).getSuccessResponse();
   }
 
-  @Get('refresh-token')
-  async refreshToken() {
-    return null;
+  @Post('refresh-token')
+  @Auth(UserRoles.USER)
+  async refreshTokenUser(@Res() res: Response, @GetUser() user: User) {
+    const { user: u, access_token } = await this.refreshToken.execute(user);
+    const mappedUser = u.toPlainObject();
+
+    const userAndNewToken = {
+      user: mappedUser,
+      access_token,
+    };
+
+    return OkHttpResponseFactory.create(
+      res,
+      userAndNewToken,
+    ).getSuccessResponse();
   }
 }

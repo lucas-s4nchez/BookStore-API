@@ -8,7 +8,7 @@ import {
   BcriptHashPasswordService,
   JwtAuthService,
 } from './infraestructure/services';
-import { SignIn, SignUp } from './application/use-cases';
+import { RefreshToken, SignIn, SignUp } from './application/use-cases';
 import { AuthService, HashPasswordService } from './application/services';
 import { JwtStrategy } from './infraestructure/strategies';
 
@@ -18,7 +18,7 @@ import { JwtStrategy } from './infraestructure/strategies';
     PassportModule,
     JwtModule.register({
       secret: 'CLAVE_SECRETA',
-      signOptions: { expiresIn: '10s' },
+      signOptions: { expiresIn: '7d' },
     }),
   ],
   controllers: [AuthController],
@@ -53,6 +53,13 @@ import { JwtStrategy } from './infraestructure/strategies';
         return new SignUp(repository, authService, hashPasswordService);
       },
       inject: ['UserRepository', 'AuthService', 'HashPasswordService'],
+    },
+    {
+      provide: 'RefreshToken',
+      useFactory: (authService: AuthService) => {
+        return new RefreshToken(authService);
+      },
+      inject: ['AuthService'],
     },
   ],
   exports: ['AuthService', 'HashPasswordService'],

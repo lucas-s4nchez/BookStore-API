@@ -10,7 +10,7 @@ import {
 import { ROLES_KEY } from '../decorators';
 
 @Injectable()
-export class Roleguard implements CanActivate {
+export class RoleGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(
