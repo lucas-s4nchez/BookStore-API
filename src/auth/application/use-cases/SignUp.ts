@@ -17,7 +17,7 @@ export class SignUp {
   ) {}
 
   async execute(createUserDto: ICreateUserDto): Promise<IUserAndToken> {
-    const user = UserFactory.create(createUserDto);
+    const domainUser = UserFactory.create(createUserDto);
 
     const existingUser = await this.userRepository.findByEmail(
       new Email(createUserDto.email),
@@ -25,11 +25,11 @@ export class SignUp {
     if (existingUser) throw new UserAlreadyExistsException();
 
     const passwordHash = this.hashPasswordService.hashPassword(
-      user.getPassword(),
+      domainUser.getPassword(),
     );
-    user.setHashedPassword(passwordHash);
+    domainUser.setHashedPassword(passwordHash);
 
-    const createdUser = await this.userRepository.create(user);
+    const createdUser = await this.userRepository.create(domainUser);
     if (!createdUser) throw new UserFailsToCreateException();
 
     const token = this.authService.generateToken({ id: createdUser.getId() });

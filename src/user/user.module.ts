@@ -1,7 +1,8 @@
-import { Module } from '@nestjs/common';
-import { UserController } from './infrastructure/controllers/user.controller';
-import { TypeORMUserRepository } from './infrastructure/repository/TypeOrmUserRepository';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../auth/auth.module';
+import { HashPasswordService } from '../auth/application/services';
+import { TypeORMUserRepository } from './infrastructure/repository/TypeOrmUserRepository';
 import { TypeOrmUser } from './infrastructure/entities/TypeOrmUser.entity';
 import { UserRepository } from './domain/repository';
 import {
@@ -13,16 +14,26 @@ import {
   EditUserName,
   DeleteUser,
 } from './application/use-cases';
+import {
+  AdminUserManagementController,
+  UserProfileController,
+} from './infrastructure/controllers';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TypeOrmUser])],
-  controllers: [UserController],
+  imports: [
+    TypeOrmModule.forFeature([TypeOrmUser]),
+    forwardRef(() => AuthModule),
+  ],
+  controllers: [UserProfileController, AdminUserManagementController],
   providers: [
     { provide: 'UserRepository', useClass: TypeORMUserRepository },
     {
       provide: 'CreateUser',
-      useFactory: (repository: UserRepository) => new CreateUser(repository),
-      inject: ['UserRepository'],
+      useFactory: (
+        repository: UserRepository,
+        hashPasswordService: HashPasswordService,
+      ) => new CreateUser(repository, hashPasswordService),
+      inject: ['UserRepository', 'HashPasswordService'],
     },
     {
       provide: 'FindAllUsers',
@@ -41,9 +52,11 @@ import {
     },
     {
       provide: 'EditUserPassword',
-      useFactory: (repository: UserRepository) =>
-        new EditUserPassword(repository),
-      inject: ['UserRepository'],
+      useFactory: (
+        repository: UserRepository,
+        hashPasswordService: HashPasswordService,
+      ) => new EditUserPassword(repository, hashPasswordService),
+      inject: ['UserRepository', 'HashPasswordService'],
     },
     {
       provide: 'EditUserName',

@@ -14,7 +14,6 @@ import {
   HashedUserPassword,
   UserLastName,
   UserName,
-  UserPassword,
 } from '../../domain/value-objects';
 import { TypeOrmUser } from '../entities/TypeOrmUser.entity';
 
@@ -58,8 +57,11 @@ export class TypeORMUserRepository implements UserRepository {
     return updatedOrmUser ? this.toDomainUser(updatedOrmUser) : null;
   }
 
-  async editPassword(password: UserPassword, user: User): Promise<User | null> {
-    user.setPassword(password.getValue());
+  async editPassword(
+    password: HashedUserPassword,
+    user: User,
+  ): Promise<User | null> {
+    user.setHashedPassword(password.getValue());
     user.setUpdatedAt(new Date());
     const updatedOrmUser = await this.ormRepository.save(
       this.toTypeOrmUser(user),

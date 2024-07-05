@@ -1,25 +1,26 @@
-import { Uuid } from '../../../shared/domain/value-objects';
+import { HashPasswordService } from '../../../auth/application/services';
 import { User } from '../../domain/entities';
 import { UserRepository } from '../../domain/repository';
-import { UserPassword } from '../../domain/value-objects';
+import { HashedUserPassword } from '../../domain/value-objects';
 import { IEditUserPasswordDto } from '../dto';
-import {
-  UserFailsToUpdateException,
-  UserNotFoundException,
-} from '../exceptions';
+import { UserFailsToUpdateException } from '../exceptions';
 
 export class EditUserPassword {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(
+    private readonly repository: UserRepository,
+    private readonly hashPasswordService: HashPasswordService,
+  ) {}
 
   async execute(
     editUserPasswordDto: IEditUserPasswordDto,
-    id: string,
+    user: User,
   ): Promise<User> {
-    const user = await this.repository.findById(new Uuid(id));
-    if (!user) throw new UserNotFoundException();
+    const hashedPassword = this.hashPasswordService.hashPassword(
+      editUserPasswordDto.password,
+    );
 
     const editedUser = await this.repository.editPassword(
-      new UserPassword(editUserPasswordDto.password),
+      new HashedUserPassword(hashedPassword),
       user,
     );
     if (!editedUser) throw new UserFailsToUpdateException();
