@@ -6,7 +6,6 @@ import {
   UserFailsToCreateException,
 } from '../../../user/application/exceptions';
 import { ICreateUserDto } from '../../../user/application/dto';
-import { IUserAndToken } from '../../domain/interfaces';
 import { AuthService, HashPasswordService } from '../services';
 
 export class SignUp {
@@ -16,7 +15,7 @@ export class SignUp {
     private readonly hashPasswordService: HashPasswordService,
   ) {}
 
-  async execute(createUserDto: ICreateUserDto): Promise<IUserAndToken> {
+  async execute(createUserDto: ICreateUserDto): Promise<any> {
     const domainUser = UserFactory.create(createUserDto);
 
     const existingUser = await this.userRepository.findByEmail(
@@ -32,8 +31,14 @@ export class SignUp {
     const createdUser = await this.userRepository.create(domainUser);
     if (!createdUser) throw new UserFailsToCreateException();
 
-    const token = this.authService.generateToken({ id: createdUser.getId() });
+    const accessToken = await this.authService.generateAccessToken(createdUser);
+    const refreshToken =
+      await this.authService.generateRefreshToken(createdUser);
 
-    return { user: createdUser, access_token: token } as IUserAndToken;
+    return {
+      user: createdUser,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
   }
 }

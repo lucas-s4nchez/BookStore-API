@@ -10,20 +10,23 @@ import {
 } from './infraestructure/services';
 import { RefreshToken, SignIn, SignUp } from './application/use-cases';
 import { AuthService, HashPasswordService } from './application/services';
-import { JwtStrategy } from './infraestructure/strategies';
+import {
+  AccessJwtStrategy,
+  RefreshJwtStrategy,
+} from './infraestructure/strategies';
+
+//TODO: Encriptar las claves y utilizar variables de entorno
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
     PassportModule,
-    JwtModule.register({
-      secret: 'CLAVE_SECRETA',
-      signOptions: { expiresIn: '7d' },
-    }),
+    JwtModule.register({}),
   ],
   controllers: [AuthController],
   providers: [
-    JwtStrategy,
+    AccessJwtStrategy,
+    RefreshJwtStrategy,
     {
       provide: 'AuthService',
       useClass: JwtAuthService,

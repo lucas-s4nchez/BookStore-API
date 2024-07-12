@@ -1,7 +1,8 @@
 import { Email } from '../../../shared/domain/value-objects';
-import { IUserAndToken } from '../../domain/interfaces';
+import { User } from '../../../user/domain/entities';
 import { UserRepository } from '../../../user/domain/repository';
 import { UserPassword } from '../../../user/domain/value-objects';
+import { IResponse } from '../../domain/interfaces';
 import { InvalidCredentialsException } from '../exceptions';
 import { AuthService, HashPasswordService } from '../services';
 import { ISignInUserDto } from '../dto';
@@ -13,7 +14,7 @@ export class SignIn {
     private readonly hashPasswordService: HashPasswordService,
   ) {}
 
-  async execute(signInUserDto: ISignInUserDto): Promise<IUserAndToken> {
+  async execute(res: IResponse, signInUserDto: ISignInUserDto): Promise<User> {
     const email = new Email(signInUserDto.email);
     const password = new UserPassword(signInUserDto.password);
 
@@ -28,8 +29,12 @@ export class SignIn {
     );
     if (!isPasswordValid) throw new InvalidCredentialsException();
 
-    const token = this.authService.generateToken({ id: user.getId() });
+    const accessToken = await this.authService.generateAccessToken(user);
+    const refreshToken = await this.authService.generateRefreshToken(user);
 
-    return { user: user, access_token: token } as IUserAndToken;
+    this.authService.setRefreshTokenCookie(res, refreshToken);
+    this.authService.setAccessTokenCookie(res, accessToken);
+
+    return user;
   }
 }
