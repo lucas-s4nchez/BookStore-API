@@ -9,7 +9,10 @@ import { UserRepository } from '../../../user/domain/repository';
 import { UserNotFoundException } from '../../../user/application/exceptions';
 import { JwtPayload } from '../../application/interfaces';
 
-export class AccessJwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class AccessJwtStrategy extends PassportStrategy(
+  Strategy,
+  'access-jwt',
+) {
   constructor(
     private readonly configService: ConfigService,
     @Inject('UserRepository') private readonly userRepository: UserRepository,

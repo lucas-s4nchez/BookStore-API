@@ -4,7 +4,6 @@
 // agregar roles(Admin/User) X
 // obtener el usuario de la request X
 // agregar endpoints faltantes de user X
-// manejar e endpoint de "refresh-token"(guard y decorador)
+// manejar e endpoint de "refresh-token"(guard y decorador) X
 // agregar datos para paginación en endpoints que listan una entidad
 // manejar los dto de paginación
-// Interfaces de respuesta para los caso de usos que requieran, tal como el IUserAndToken

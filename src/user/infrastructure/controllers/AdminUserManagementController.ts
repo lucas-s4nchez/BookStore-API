@@ -16,7 +16,7 @@ import {
   FindUserById,
 } from '../../application/use-cases';
 import { OkHttpResponseFactory } from '../../../shared/infraestructure/factories/OkHttpResponseFactory';
-import { Auth } from '../../../auth/infraestructure/decorators';
+import { AuthWithAccessToken } from '../../../auth/infraestructure/decorators';
 import { UserRoles } from '../../../auth/domain/enums';
 import { ICreateUserDto } from '../../application/dto';
 
@@ -29,7 +29,7 @@ export class AdminUserManagementController {
   ) {}
 
   @Post('create')
-  @Auth(UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.ADMIN)
   async create(@Res() res: Response, @Body() createUserDto: ICreateUserDto) {
     const userCreated = await this.createUser.execute(createUserDto);
     const mappedUser = userCreated.toPlainObject();
@@ -41,7 +41,7 @@ export class AdminUserManagementController {
   }
 
   @Get('get-all')
-  @Auth(UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.ADMIN)
   async getAll(@Res() res: Response) {
     const users = await this.findAllUsers.execute();
     const mappedUsers = users.map((user) => user.toPlainObject());
@@ -50,7 +50,7 @@ export class AdminUserManagementController {
   }
 
   @Get('get-one/:id')
-  @Auth(UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.ADMIN)
   async findOne(@Res() res: Response, @Param('id') id: string) {
     const user = await this.findUserById.execute(id);
     const mappedUser = user.toPlainObject();

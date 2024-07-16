@@ -1,9 +1,13 @@
+import { IResponse } from '../../../auth/domain/interfaces';
 import { AuthService } from '../services';
 
 export class RefreshToken {
   constructor(private readonly authService: AuthService) {}
 
-  async execute(refreshToken: string): Promise<string> {
-    return await this.authService.renewAccessToken(refreshToken);
+  async execute(res: IResponse, refreshToken: string): Promise<void> {
+    const newAccessToken =
+      await this.authService.renewAccessToken(refreshToken);
+
+    this.authService.setAccessTokenCookie(res, newAccessToken);
   }
 }

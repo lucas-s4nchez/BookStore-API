@@ -1,9 +1,14 @@
-import { Response } from 'express';
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
-import { OkHttpResponseFactory } from '../../../shared/infraestructure/factories';
+import { Request, Response } from 'express';
+import { Body, Controller, Inject, Post, Req, Res } from '@nestjs/common';
+import {
+  NoContentHttpResponseFactory,
+  OkHttpResponseFactory,
+} from '../../../shared/infraestructure/factories';
 import { ICreateUserDto } from '../../../user/application/dto';
 import { ISignInUserDto } from '../../application/dto';
 import { RefreshToken, SignIn, SignUp } from '../../application/use-cases';
+import { AuthWithRefreshToken } from '../decorators';
+import { RefreshTokenNotFoundException } from '../exceptions';
 
 @Controller('auth')
 export class AuthController {
@@ -37,20 +42,15 @@ export class AuthController {
     return OkHttpResponseFactory.create(res, mappedUser).getSuccessResponse();
   }
 
-  // @Post('refresh-token')
-  // @Auth(UserRoles.USER)
-  // async refreshTokenUser(@Res() res: Response, @GetUser() user: User) {
-  //   const { user: u, access_token } = await this.refreshToken.execute(user);
-  //   const mappedUser = u.toPlainObject();
+  @Post('refresh-token')
+  @AuthWithRefreshToken()
+  async refreshTokenUser(@Res() res: Response, @Req() req: Request) {
+    const refreshToken: string = req?.cookies?.refresh_token;
 
-  //   const userAndNewToken = {
-  //     user: mappedUser,
-  //     access_token,
-  //   };
+    if (!refreshToken) throw new RefreshTokenNotFoundException();
 
-  //   return OkHttpResponseFactory.create(
-  //     res,
-  //     userAndNewToken,
-  //   ).getSuccessResponse();
-  // }
+    await this.refreshToken.execute(res, refreshToken);
+
+    return NoContentHttpResponseFactory.create(res).getSuccessResponse();
+  }
 }

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Inject, UnauthorizedException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Uuid } from '../../../shared/domain/value-objects';
@@ -8,6 +8,7 @@ import { UserNotFoundException } from '../../../user/application/exceptions';
 import { User } from '../../../user/domain/entities';
 import { AuthService } from '../../application/services';
 import { JwtPayload } from '../../application/interfaces';
+import { InvalidRefreshTokenException } from '../exceptions';
 
 export class JwtAuthService implements AuthService {
   private readonly accessTokenSecret: string;
@@ -78,7 +79,7 @@ export class JwtAuthService implements AuthService {
 
   async renewAccessToken(refreshToken: string): Promise<string> {
     const payload = await this.verifyRefreshToken(refreshToken);
-    if (!payload) throw new UnauthorizedException('Invalid refresh token');
+    if (!payload) throw new InvalidRefreshTokenException();
 
     const user = await this.validateUser(payload);
     if (!user) throw new UserNotFoundException();

@@ -16,14 +16,17 @@ import {
   EditUserPassword,
 } from '../../application/use-cases';
 import { OkHttpResponseFactory } from '../../../shared/infraestructure/factories/OkHttpResponseFactory';
-import { Auth, GetUser } from '../../../auth/infraestructure/decorators';
+import {
+  AuthWithAccessToken,
+  GetUser,
+} from '../../../auth/infraestructure/decorators';
 import { UserRoles } from '../../../auth/domain/enums';
+import { User } from '../../domain/entities';
 import {
   IEditUserEmailDto,
   IEditUserNameDto,
   IEditUserPasswordDto,
 } from '../../application/dto';
-import { User } from 'src/user/domain/entities';
 
 @Controller('user/profile')
 export class UserProfileController {
@@ -36,7 +39,7 @@ export class UserProfileController {
   ) {}
 
   @Get() //TODO: get user and relations from db
-  @Auth(UserRoles.USER, UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.USER, UserRoles.ADMIN)
   async getProfile(@Res() res: Response, @GetUser() user: User) {
     const mappedUser = user.toPlainObject();
 
@@ -44,7 +47,7 @@ export class UserProfileController {
   }
 
   @Patch('edit-email')
-  @Auth(UserRoles.USER, UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.USER, UserRoles.ADMIN)
   async editEmail(
     @Res() res: Response,
     @GetUser() user: User,
@@ -57,7 +60,7 @@ export class UserProfileController {
   }
 
   @Patch('edit-password')
-  @Auth(UserRoles.USER, UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.USER, UserRoles.ADMIN)
   async editPassword(
     @Res() res: Response,
     @GetUser() user: User,
@@ -73,7 +76,7 @@ export class UserProfileController {
   }
 
   @Patch('edit-name')
-  @Auth(UserRoles.USER, UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.USER, UserRoles.ADMIN)
   async editName(
     @Res() res: Response,
     @GetUser() user: User,
@@ -86,7 +89,7 @@ export class UserProfileController {
   }
 
   @Delete('delete')
-  @Auth(UserRoles.USER, UserRoles.ADMIN)
+  @AuthWithAccessToken(UserRoles.USER, UserRoles.ADMIN)
   async delete(@Res() res: Response, @GetUser() user: User) {
     const deletedUser = await this.deleteUser.execute(user);
     const mappedUser = deletedUser.toPlainObject();
